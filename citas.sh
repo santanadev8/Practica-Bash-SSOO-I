@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Crear archivo de citas si no existe
+if [[$FILE == "datos.txt"]]; then
+    echo "Archivo ya existe" > /dev/null
+else
+    touch datos.txt
+    echo "Archivo creado"
+fi
+
 # Archivo de citas
 FILE="datos.txt"
 
@@ -130,7 +138,22 @@ function listar_citas_dia() {
 # Función para buscar cita por ID
 function buscar_por_id() {
     if [[ -f "$FILE" ]]; then
-        grep -A 5 "ID: $1" "$FILE"
+        # Usamos un bucle para leer el archivo línea por línea
+        while IFS= read -r line; do
+            # Guardamos el bloque de citas
+            cita=""
+            # Comenzamos a construir un bloque de citas
+            while [[ "$line" ]]; do
+                cita+="$line"$'\n'  # Agrega la línea al bloque
+                read -r line  # Lee la siguiente línea
+            done
+            
+            # Verificamos si el bloque contiene la fecha deseada
+            if [[ "$cita" == *"ID: $1"* ]]; then
+                echo -e "$cita"  # Imprime el bloque completo si coincide
+                echo ""  # Agrega una línea en blanco entre citas
+            fi
+        done < "$FILE"
     else
         echo "El fichero no existe"
     fi
@@ -139,7 +162,22 @@ function buscar_por_id() {
 # Función para buscar cita por nombre de paciente
 function buscar_por_nombre() {
     if [[ -f "$FILE" ]]; then
-        grep -A 5 "PACIENTE: $1" "$FILE"
+        # Usamos un bucle para leer el archivo línea por línea
+        while IFS= read -r line; do
+            # Guardamos el bloque de citas
+            cita=""
+            # Comenzamos a construir un bloque de citas
+            while [[ "$line" ]]; do
+                cita+="$line"$'\n'  # Agrega la línea al bloque
+                read -r line  # Lee la siguiente línea
+            done
+            
+            # Verificamos si el bloque contiene la fecha deseada
+            if [[ "$cita" == *"PACIENTE: $1"* ]]; then
+                echo -e "$cita"  # Imprime el bloque completo si coincide
+                echo ""  # Agrega una línea en blanco entre citas
+            fi
+        done < "$FILE"
     else
         echo "El fichero no existe"
     fi
@@ -148,7 +186,22 @@ function buscar_por_nombre() {
 # Función para buscar citas por hora de inicio
 function buscar_por_hora_inicio() {
     if [[ -f "$FILE" ]]; then
-        grep -A 5 "HORA_INICIAL: $1" "$FILE"
+        # Usamos un bucle para leer el archivo línea por línea
+        while IFS= read -r line; do
+            # Guardamos el bloque de citas
+            cita=""
+            # Comenzamos a construir un bloque de citas
+            while [[ "$line" ]]; do
+                cita+="$line"$'\n'  # Agrega la línea al bloque
+                read -r line  # Lee la siguiente línea
+            done
+            
+            # Verificamos si el bloque contiene la fecha deseada
+            if [[ "$cita" == *"HORA_INICIAL: $1"* ]]; then
+                echo -e "$cita"  # Imprime el bloque completo si coincide
+                echo ""  # Agrega una línea en blanco entre citas
+            fi
+        done < "$FILE"
     else
         echo "El fichero no existe"
     fi
