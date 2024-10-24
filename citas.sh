@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # Crear archivo de citas si no existe
-if [[$FILE == "datos.txt"]]; then
-    echo "Archivo ya existe" > /dev/null
-else
-    touch datos.txt
-    echo "Archivo creado"
-fi
+# if [[$FILE == "datos.txt"]]; then
+#     echo "Archivo ya existe" > /dev/null
+# else
+#     touch datos.txt
+#     echo "Archivo creado"
+# fi
 
 # Archivo de citas
-FILE="datos.txt"
+#FILE="datos.txt"
 
 # Función para mostrar ayuda
 function mostrar_ayuda() {
@@ -25,8 +25,9 @@ function mostrar_ayuda() {
 
 # Función para mostrar contenido del archivo
 function mostrar_fichero() {
-    if [[ -f "$FILE" ]]; then
-        cat "$FILE"
+    local archivo="$1"
+    if [[ -f "$archivo" ]]; then
+        cat "$archivo"
     else
         echo "El fichero no existe"
     fi
@@ -45,8 +46,8 @@ function añadir_cita() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -n)
-                nombre_paciente="$2"
-                shift 2
+                nombre_paciente="$2 $3 $4"
+                shift 4
                 ;;
             -e)
                 especialidad="$2"
@@ -86,7 +87,7 @@ function añadir_cita() {
         return 1
     fi
 
-    # Depuración: Mostrar los valores que se agregarán
+    # Mostrar los valores que se agregarán
     echo "Añadiendo cita con los siguientes datos:"
     echo "PACIENTE: $nombre_paciente"
     echo "ESPECIALIDAD: $especialidad"
@@ -111,7 +112,7 @@ function añadir_cita() {
 }
 
 # Función para listar citas de un día
-function listar_citas_dia() {
+function buscar_por_dia() {
     if [[ -f "$FILE" ]]; then
         # Usamos un bucle para leer el archivo línea por línea
         while IFS= read -r line; do
@@ -119,14 +120,14 @@ function listar_citas_dia() {
             cita=""
             # Comenzamos a construir un bloque de citas
             while [[ "$line" ]]; do
-                cita+="$line"$'\n'  # Agrega la línea al bloque
-                read -r line  # Lee la siguiente línea
+                cita+="$line"$'\n' 
+                read -r line  
             done
             
             # Verificamos si el bloque contiene la fecha deseada
             if [[ "$cita" == *"DIA: $1"* ]]; then
-                echo -e "$cita"  # Imprime el bloque completo si coincide
-                echo ""  # Agrega una línea en blanco entre citas
+                echo -e "$cita"  
+                echo "" 
             fi
         done < "$FILE"
     else
@@ -135,23 +136,18 @@ function listar_citas_dia() {
 }
 
 
-# Función para buscar cita por ID
 function buscar_por_id() {
     if [[ -f "$FILE" ]]; then
-        # Usamos un bucle para leer el archivo línea por línea
         while IFS= read -r line; do
-            # Guardamos el bloque de citas
             cita=""
-            # Comenzamos a construir un bloque de citas
             while [[ "$line" ]]; do
-                cita+="$line"$'\n'  # Agrega la línea al bloque
-                read -r line  # Lee la siguiente línea
+                cita+="$line"$'\n'  
+                read -r line 
             done
             
-            # Verificamos si el bloque contiene la fecha deseada
             if [[ "$cita" == *"ID: $1"* ]]; then
-                echo -e "$cita"  # Imprime el bloque completo si coincide
-                echo ""  # Agrega una línea en blanco entre citas
+                echo -e "$cita"  
+                echo ""  
             fi
         done < "$FILE"
     else
@@ -159,23 +155,18 @@ function buscar_por_id() {
     fi
 }
 
-# Función para buscar cita por nombre de paciente
 function buscar_por_nombre() {
     if [[ -f "$FILE" ]]; then
-        # Usamos un bucle para leer el archivo línea por línea
         while IFS= read -r line; do
-            # Guardamos el bloque de citas
             cita=""
-            # Comenzamos a construir un bloque de citas
             while [[ "$line" ]]; do
-                cita+="$line"$'\n'  # Agrega la línea al bloque
-                read -r line  # Lee la siguiente línea
+                cita+="$line"$'\n' 
+                read -r line 
             done
             
-            # Verificamos si el bloque contiene la fecha deseada
-            if [[ "$cita" == *"PACIENTE: $1"* ]]; then
-                echo -e "$cita"  # Imprime el bloque completo si coincide
-                echo ""  # Agrega una línea en blanco entre citas
+            if [[ "$cita" == *"PACIENTE: $1 $2 $3"* ]]; then
+                echo -e "$cita" 
+                echo ""  
             fi
         done < "$FILE"
     else
@@ -183,23 +174,18 @@ function buscar_por_nombre() {
     fi
 }
 
-# Función para buscar citas por hora de inicio
 function buscar_por_hora_inicio() {
     if [[ -f "$FILE" ]]; then
-        # Usamos un bucle para leer el archivo línea por línea
         while IFS= read -r line; do
-            # Guardamos el bloque de citas
             cita=""
-            # Comenzamos a construir un bloque de citas
             while [[ "$line" ]]; do
-                cita+="$line"$'\n'  # Agrega la línea al bloque
-                read -r line  # Lee la siguiente línea
+                cita+="$line"$'\n'  
+                read -r line 
             done
-            
-            # Verificamos si el bloque contiene la fecha deseada
+        
             if [[ "$cita" == *"HORA_INICIAL: $1"* ]]; then
-                echo -e "$cita"  # Imprime el bloque completo si coincide
-                echo ""  # Agrega una línea en blanco entre citas
+                echo -e "$cita" 
+                echo ""  
             fi
         done < "$FILE"
     else
@@ -209,40 +195,63 @@ function buscar_por_hora_inicio() {
 
 # Verifica los argumentos
 if [[ $# -lt 1 ]]; then
+    echo -e "Tienes que introducir al menos un argumento\n"
     mostrar_ayuda
     exit 1
 fi
 
-# Procesa los argumentos
-case "$1" in
-    -h)
-        mostrar_ayuda
-        ;;
-    -f)
-        mostrar_fichero
-        ;;
-    -a)
-        shift
-        añadir_cita "$@"
-        ;;
-    -d)
-        shift
-        listar_citas_dia "$1"
-        ;;
-    -id)
-        shift
-        buscar_por_id "$1"
-        ;;
-    -n)
-        shift
-        buscar_por_nombre "$1"
-        ;;
-    -i)
-        shift
-        buscar_por_hora_inicio "$1"
-        ;;
-    *)
-        echo "Opción no válida"
-        mostrar_ayuda
-        ;;
-esac
+# Comprobacion de argumentos
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h)
+            mostrar_ayuda
+            exit 0
+            ;;
+        -f)
+            shift
+            FILE=$(find . -name "$1")
+            if [[ -z "$FILE" ]]; then
+                FILE="$1"
+                touch "$FILE"
+            else
+                FILE="$1"
+            fi
+            ;;
+        -a)
+            shift
+            añadir_cita "$@"
+            exit 0
+            ;;
+        -d)
+            shift
+            buscar_por_dia "$1"
+            exit 0
+            ;;
+        -id)
+            shift
+            buscar_por_id "$1"
+            exit 0
+            ;;
+        -n)
+            shift
+            buscar_por_nombre "$1" "$2" "$3"
+            exit 0
+            ;;
+        -i)
+            shift
+            buscar_por_hora_inicio "$1"
+            exit 0
+            ;;
+        *)
+            echo -e "Opción no válida: $1\n"
+            mostrar_ayuda
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+# Si se especifica el archivo pero no se da ninguna opción adicional, mostrar el contenido del archivo
+if [[ -n "$FILE" ]]; then
+    mostrar_fichero "$FILE"
+fi
