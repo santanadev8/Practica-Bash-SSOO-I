@@ -34,6 +34,7 @@ function mostrar_fichero() {
 }
 
 # Función para añadir una cita
+# Función para añadir una cita
 function añadir_cita() {
     local nombre_paciente=""
     local especialidad=""
@@ -46,12 +47,20 @@ function añadir_cita() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -n)
-                nombre_paciente="$2 $3 $4"
-                shift 4
+                nombre_paciente="$2"
+                shift 2
+                while [[ $# -gt 0 && "$1" != -* ]]; do
+                    nombre_paciente="$nombre_paciente $1"
+                    shift
+                done
                 ;;
             -e)
                 especialidad="$2"
                 shift 2
+                while [[ $# -gt 0 && "$1" != -* ]]; do
+                    especialidad="$especialidad $1"
+                    shift
+                done
                 ;;
             -i)
                 inicio="$2"
@@ -111,6 +120,7 @@ function añadir_cita() {
     echo "Cita añadida correctamente"
 }
 
+
 # Función para listar citas de un día
 function buscar_por_dia() {
     if [[ -f "$FILE" ]]; then
@@ -157,16 +167,23 @@ function buscar_por_id() {
 
 function buscar_por_nombre() {
     if [[ -f "$FILE" ]]; then
+        nombre_paciente="$1"
+        shift
+        while [[ $# -gt 0 && "$1" != -* ]]; do
+            nombre_paciente="$nombre_paciente $1"
+            shift
+        done
+
         while IFS= read -r line; do
             cita=""
             while [[ "$line" ]]; do
-                cita+="$line"$'\n' 
-                read -r line 
+                cita+="$line"$'\n'
+                read -r line
             done
-            
-            if [[ "$cita" == *"PACIENTE: $1 $2 $3"* ]]; then
-                echo -e "$cita" 
-                echo ""  
+
+            if echo "$cita" | grep "^PACIENTE: $nombre_paciente$" > /dev/null; then
+                echo -e "$cita"
+                echo ""
             fi
         done < "$FILE"
     else
@@ -195,7 +212,7 @@ function buscar_por_hora_inicio() {
 
 # Verifica los argumentos
 if [[ $# -lt 1 ]]; then
-    echo -e "Tienes que introducir al menos un argumento\n"
+    echo -e "Tienes que introducir al menos un argumento.\n"
     mostrar_ayuda
     exit 1
 fi
