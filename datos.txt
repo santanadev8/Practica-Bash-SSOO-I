@@ -67,3 +67,67 @@ HORA_FINAL: 23
 DIA: 15_12_2025
 ID: 999
 
+
+PACIENTE: Ana Pér
+ESPECIALIDAD: medico de los huevos
+HORA_INICIAL: 22
+HORA_FINAL: 23
+DIA: 15_12_2025
+ID: 999
+
+
+PACIENTE: Ana Pér
+ESPECIALIDAD: medico de los huevos
+HORA_INICIAL: 22
+HORA_FINAL: 23
+DIA: 15_2_2025
+ID: 999
+
+
+PACIENTE: ohfsd djfnj fggdfg
+ESPECIALIDAD: cardio
+HORA_INICIAL: 11
+HORA_FINAL: 13
+DIA: 7_10_24
+ID: 78
+
+
+PACIENTE: ohfsd djfnj fggg
+ESPECIALIDAD: medicina
+HORA_INICIAL: 11
+HORA_FINAL: 13
+DIA: 07_10_28
+ID: 78
+
+
+PACIENTE: ohfsd djfnj fgggfd
+ESPECIALIDAD: atencion primaria
+HORA_INICIAL: 11
+HORA_FINAL: 13
+DIA: 07_12_28
+ID: 78
+
+
+PACIENTE: ohfsd djfnj fgertrt
+ESPECIALIDAD: atencion secundaria
+HORA_INICIAL: 10
+HORA_FINAL: 14
+DIA: 07_12_28
+ID: 78
+
+
+PACIENTE: ohfsd djfnj fdvvcb
+ESPECIALIDAD: atencion terciaria
+HORA_INICIAL: 20
+HORA_FINAL: 21
+DIA: 07_12_28
+ID: 78
+
+
+PACIENTE: ohfsd djfnj ftryhg
+ESPECIALIDAD: atencion terciari
+HORA_INICIAL: 20
+HORA_FINAL: 21
+DIA: 07_12_28
+ID: 78
+
