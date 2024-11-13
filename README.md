@@ -1,5 +1,3 @@
-### README.md
-
 # Proyecto: SSOO-I
 
 Este proyecto es un script en Bash para gestionar citas médicas.
